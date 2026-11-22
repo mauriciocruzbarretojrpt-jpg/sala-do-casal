@@ -1,0 +1,110 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="theme-color" content="#ff4d8d">
+  <title>Sala do Casal 💖</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <!-- Tela de entrada -->
+  <section id="login" class="screen">
+    <div class="login-card">
+      <div class="big-heart">💞</div>
+      <h1>Sala do Casal</h1>
+      <p class="muted">Entrem no mesmo código de sala para conversar e jogar juntinhos.</p>
+      <form id="loginForm">
+        <label>Seu nome<input id="name" maxlength="20" placeholder="Ex: Mauricio" autocomplete="off" required></label>
+        <label>Código da sala<input id="room" maxlength="12" placeholder="Ex: NOSSOAMOR" autocomplete="off" required></label>
+        <label>Seu avatar
+          <select id="avatar">
+            <option value="ela3d">💖 Ela</option>
+            <option value="moletom">🎧 Ele</option>
+          </select>
+        </label>
+        <button type="submit" class="btn primary">Entrar 💕</button>
+        <p id="loginError" class="error"></p>
+      </form>
+    </div>
+  </section>
+
+  <!-- Sala -->
+  <section id="app" class="screen hidden">
+    <header class="topbar">
+      <div class="brand">💖 Sala <span id="roomCode"></span></div>
+      <div id="playersBar" class="players"></div>
+      <div class="top-actions">
+        <button id="botBtn" class="btn ghost hidden" title="Robô">🤖</button>
+        <button id="muteBtn" class="btn ghost icon" title="Som">🔊</button>
+      </div>
+      <button id="chatToggle" class="btn ghost icon mobile-only" title="Mostrar/esconder chat">💬<span id="unread" class="badge hidden"></span></button>
+    </header>
+    <main class="layout">
+      <div class="stage">
+        <div id="lobby">
+          <div id="world"></div>
+          <p id="waitMsg" class="hud-top"></p>
+          <button id="listBtn" class="btn ghost hud-list">☰ Jogos</button>
+          <p class="hud-hint">Ande com <b>WASD / setas</b> ou o joystick · chegue perto de uma máquina (ou toque nela) para jogar</p>
+          <button id="playPrompt" class="btn primary play-prompt hidden"></button>
+          <button id="botCta" class="btn primary bot-cta hidden">🤖 Jogar sozinho com o robô</button>
+          <div id="emotes" class="emote-bar">
+            <button data-e="💖">💖</button><button data-e="😘">😘</button><button data-e="😂">😂</button><button data-e="👋">👋</button>
+          </div>
+          <div id="joystick" class="joystick"><div class="knob"></div></div>
+          <div id="gameList" class="game-list hidden">
+          <h2>Escolham um minigame</h2>
+          <div class="games">
+            <button class="game-card" data-game="tenis"><span>🎾</span><b>Tênis</b><small>Quadra 3D com vocês dois</small></button>
+            <button class="game-card" data-game="corrida"><span>🏎️</span><b>Corrida</b><small>3 voltas, quem chega primeiro</small></button>
+            <button class="game-card" data-game="bilhar"><span>🎱</span><b>Bilhar</b><small>Sinuca bola 8</small></button>
+            <button class="game-card" data-game="velha"><span>❌⭕</span><b>Jogo da Velha</b><small>Clássico, 3 em linha</small></button>
+            <button class="game-card" data-game="lig4"><span>🔴🟡</span><b>Ligue 4</b><small>Alinhe 4 peças</small></button>
+            <button class="game-card" data-game="ppt"><span>✊✋✌️</span><b>Pedra, Papel e Tesoura</b><small>Escolha em segredo</small></button>
+            <button class="game-card" data-game="memoria"><span>🃏</span><b>Jogo da Memória</b><small>Ache os pares</small></button>
+            <button class="game-card" data-game="desenho"><span>🎨</span><b>Desenhe e Adivinhe</b><small>Adivinhe pelo chat</small></button>
+            <button class="game-card" data-game="sintonia"><span>💑</span><b>Sintonia do Casal</b><small>Quem é mais provável…?</small></button>
+          </div>
+          </div>
+        </div>
+        <div id="gameArea" class="hidden">
+          <div class="game-head">
+            <button id="exitBtn" class="btn ghost">← Jogos</button>
+            <h2 id="gameTitle"></h2>
+            <button id="fsBtn" class="btn ghost icon" title="Tela cheia">⛶</button>
+            <div id="score" class="score"></div>
+          </div>
+          <div id="status" class="status"></div>
+          <div id="board"></div>
+          <div class="center"><button id="restartBtn" class="btn primary hidden">Jogar de novo 🔁</button></div>
+        </div>
+      </div>
+      <aside class="chat">
+        <div id="messages" class="messages"></div>
+        <div id="typing" class="typing"></div>
+        <form id="chatForm" class="chat-form">
+          <button type="button" id="emojiBtn" class="btn ghost icon" title="Emojis">😊</button>
+          <input id="chatInput" placeholder="Escreva algo fofo..." autocomplete="off" maxlength="500">
+          <button class="btn primary icon" title="Enviar">➤</button>
+        </form>
+        <div id="emojiPanel" class="emoji-panel hidden"></div>
+      </aside>
+    </main>
+  </section>
+
+  <script src="/socket.io/socket.io.js"></script>
+  <script src="fx.js"></script>
+  <script src="app.js"></script>
+  <script src="minigames.js"></script>
+  <script src="arcade.js"></script>
+  <script src="pool.js"></script>
+  <script type="importmap">{ "imports": { "three": "/vendor/three/three.module.js", "three/addons/": "/vendor/three-addons/" } }</script>
+  <script type="module" src="lobby3d.js"></script>
+  <script type="module" src="tennis.js"></script>
+</body>
+</html>
